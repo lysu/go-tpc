@@ -27,6 +27,15 @@ func NewTpcState(ctx context.Context, db *sql.DB) *TpcState {
 		if err != nil {
 			panic(err.Error())
 		}
+		row, err := conn.QueryContext(ctx, "set session aurora_mm_session_consistency_level = 'REGIONAL_RAW'")
+		if err != nil {
+			panic(err.Error())
+		}
+		if row != nil {
+			defer row.Close()
+			for row.Next() {
+			}
+		}
 	}
 
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
